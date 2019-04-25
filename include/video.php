@@ -1,0 +1,1 @@
+<video loop autoplay muted <?php foreach ($attributes as $key => $value) { ?><?php echo $key; ?>="<?php echo $value; ?>" <?php } ?>>
