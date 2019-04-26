@@ -86,6 +86,71 @@ class Background_Image_Manager {
 
 	}
 
+	/**
+	 * Get image sources
+	 */
+	public function get_image_source($img_id, $img_sizes = null, $type = 'image/jpeg') {
+		static $baseurl;
+
+		if (!isset($baseurl)) {
+
+			$uploads = wp_get_upload_dir();
+			$baseurl = $uploads['baseurl'] . '/';
+
+		}
+
+		$sources = array();
+		$metadata = wp_get_attachment_metadata($img_id);
+		$path = '';
+		$file = get_post_meta($img_id, '_wp_attached_file', true);
+
+		if ($type === 'image/jpeg' || $type === 'image/jpg' || $type === 'image/png') {
+
+			if (!$img_sizes) {
+
+				$img_sizes = $this->get_option('sizes', get_intermediate_image_sizes());
+
+			}
+
+			$basename = basename($file);
+			$path = str_replace($basename, '', $file);
+
+			foreach ($img_sizes as $img_size) {
+
+				if (isset($metadata['sizes'][$img_size])) {
+
+					$sources[] = array(
+						'src' => $baseurl . $path . $metadata['sizes'][$img_size]['file'],
+						'width' => $metadata['sizes'][$img_size]['width'],
+						'height' => $metadata['sizes'][$img_size]['height']
+					);
+
+				}
+
+			}
+
+// 		full ->
+//
+// 			$sources[] = array(
+// 				'src' => $metadata['file'],
+// 				'width' => $metadata['width'],
+// 				'height' => $metadata['height']
+// 			);
+
+		} else if (strpos($type, 'video') !== false) {
+
+			$sources[] = array(
+				'src' => $baseurl . $file,
+				'width' => $metadata['width'],
+				'height' => $metadata['height']
+			);
+
+		}
+
+		return $sources;
+
+	}
+
 }
 
 
