@@ -82,6 +82,3 @@ function createImageLoaderManager(image) {
 	});
 	return manager;
 }
-
-
-

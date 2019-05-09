@@ -4,18 +4,18 @@ function createFitManager(image) {
 		height: 0,
 		size: "cover",
 		position: "center",
-		fit: function() {
-			var ratio = (this.imageHeight || image.naturalHeight)/(this.imageWidth || image.naturalWidth);
-			var containerRatio = this.height/this.width;
+		fit: function(containerWidth, containerHeight, imageWidth, imageHeight) {
+			var ratio = imageHeight/imageWidth;
+			var containerRatio = containerHeight/containerWidth;
 			var alignH = 0.5;
 			var alignV = 0.5;
 			var width, height;
-			
+
 			if (this.size === "cover" && ratio > containerRatio || this.size === "contain" && ratio < containerRatio) { // align width
-				width = this.width;
+				width = containerWidth;
 				height = width*ratio;
 			} else { // align height
-				height = this.height;
+				height = containerHeight;
 				width = height/ratio;
 			}
 			if (this.position && this.position !== "center") {
@@ -24,21 +24,22 @@ function createFitManager(image) {
 				if (this.position.indexOf("top") > -1) alignV = 0;
 				if (this.position.indexOf("bottom") > -1) alignV = 1;
 			}
-			var top = (this.height - height)*alignV;
-			var left = (this.width - width)*alignH;
+			var top = (containerHeight - height)*alignV;
+			var left = (containerWidth - width)*alignH;
 			image.style.top = top.toFixed() + "px";
 			image.style.left = left.toFixed() + "px";
 			image.style.width = width.toFixed() + "px";
 			image.style.height = height.toFixed() + "px";
 			image.style.display = "block";
-			
 			image.parentNode.style.overflow = "hidden";
 		},
 		update: function() {
-			this.width = image.parentNode && image.parentNode.clientWidth;
-			this.height = image.parentNode && image.parentNode.clientHeight;
-			if (this.width && this.height && (this.imageHeight || image.naturalHeight) && (this.imageWidth || image.naturalWidth)) {
-				this.fit();
+			var width = this.width || image.parentNode && image.parentNode.clientWidth;
+			var height = this.height || image.parentNode && image.parentNode.clientHeight;
+			var imageWidth = this.imageWidth || image.width || image.naturalWidth;
+			var imageHeight = this.imageHeight || image.height || image.naturalHeight;
+			if (width && height && imageHeight && imageWidth) {
+				this.fit(width, height, imageWidth, imageHeight);
 			}
 		}
 	};
