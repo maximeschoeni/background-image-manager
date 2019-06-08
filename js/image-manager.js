@@ -1,13 +1,15 @@
 function createBackgroundImage(sources, size, position) {
 	var image = new Image(sources[0].width, sources[0].height);
 	image.src = sources[0].src;
-	if (bim_option.display_method === 'object_fit') {
+	if (bim_option.display_method === 'object_fit' && (size === "cover" || size === "contain")) {
 		image.style.objectFit = size;
 		image.style.objectPosition = position;
 		image.style.width = "100%";
 		image.style.height = "100%";
 	}
-	image.style.position = "absolute";
+	if (size === "cover" || size === "contain") {
+		image.style.position = "absolute";
+	}
 	registerBackgroundImage(image, size, position, sources);
 	return image;
 }
@@ -27,7 +29,8 @@ function onBackgroundVideo(video, size, position) {
 	}
 }
 function registerBackgroundImage(image, size, position, sources) {
-	if (bim_option.display_method === 'image') {
+
+	if (bim_option.display_method === 'image' && (size === "cover" || size === "contain")) {
 		var fitManager = createFitManager(image);
 		fitManager.size = size;
 		fitManager.position = position;

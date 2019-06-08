@@ -7,10 +7,10 @@ function createAutoLoaderManager() {
 		pixelRatio: window.devicePixelRatio ? window.devicePixelRatio : 1,
 		image: null,
 		getMinWidth: function() {
-			if (this.image && this.image.naturalHeight && this.image.naturalHeight) {
-				if (this.size === "contain") {
+			if (this.image) {
+				if (this.size === "contain" && this.image.naturalHeight && this.image.naturalHeight) {
 					return this.pixelRatio*Math.min(this.width, this.height*this.image.naturalWidth/this.image.naturalHeight);
-				} else if (this.size === "cover") {
+				} else if (this.size === "cover" && this.image.naturalHeight && this.image.naturalHeight) {
 					return this.pixelRatio*Math.max(this.width, this.height*this.image.naturalWidth/this.image.naturalHeight);
 				}
 			}
@@ -19,8 +19,8 @@ function createAutoLoaderManager() {
 		upgrade: function() {
 			var level = this.currentLevel;
 			var minWidth = this.getMinWidth();
-			function onload() {				
-				if (level > manager.currentLevel) {	
+			function onload() {
+				if (level > manager.currentLevel) {
 					manager.currentLevel = level;
 					manager.image = this;
 					if (manager.onUpgrade) {
@@ -36,11 +36,11 @@ function createAutoLoaderManager() {
 			if (this.progressive === false) {
 				while(level + 1 < this.sources.length && this.sources[level].width < minWidth) {
 					level++;
-				}			
+				}
 			}
 			if (level > this.currentLevel) {
 				var nextImage = new Image();
-				nextImage.src = encodeURI(this.sources[level].src);				
+				nextImage.src = encodeURI(this.sources[level].src);
 				nextImage.addEventListener("load", onload);
 			}
 		},
@@ -65,7 +65,7 @@ function createAutoLoaderManager() {
 				else return 0;
 			});
 		}
-		
+
 	};
 	return manager;
 }

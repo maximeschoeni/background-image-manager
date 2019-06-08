@@ -1,6 +1,5 @@
 <?php
 
-
 class Background_Image_Manager_Site extends Background_Image_Manager {
 
 	var $option_nonce = 'background_image_manager_nonce';
@@ -26,7 +25,8 @@ class Background_Image_Manager_Site extends Background_Image_Manager {
 	public function init() {
 
 		add_action('wp_head', array($this, 'print_script'));
-		add_action('background-image', array($this, 'filter_background_image'), 10, 5);
+		add_filter('background-image', array($this, 'filter_background_image'), 10, 5);
+		add_filter('background-image-iframe', array($this, 'filter_iframe'), 10, 3);
 
 	}
 
@@ -113,7 +113,10 @@ class Background_Image_Manager_Site extends Background_Image_Manager {
 				$attributes = array_merge($args, $attributes);
 
 				$attributes['onload'] = "onBackgroundImageLoad(this, '$size', '$position')";
-				$attributes['style'] = 'position:absolute;';
+
+				if ($size === 'cover' || $size === 'contain') {
+					$attributes['style'] = 'position:absolute;';
+				}
 
 				if ($loading_method === 'srcset') {
 
@@ -121,7 +124,6 @@ class Background_Image_Manager_Site extends Background_Image_Manager {
 
 				} else if ($loading_method === 'auto-load') {
 
-					$attributes['data-srcset'] = $this->get_srcset($sources);
 					$attributes['data-srcset'] = $this->get_srcset($sources);
 					$attributes['style'] .= 'display:none;'; // -> prevent glitch
 
@@ -167,7 +169,8 @@ class Background_Image_Manager_Site extends Background_Image_Manager {
 
 		return $html;
 	}
-	
+
+
 	/**
 	 * get srcset
 	 */
@@ -242,6 +245,45 @@ class Background_Image_Manager_Site extends Background_Image_Manager {
 
 	}
 
+	/**
+	 * @filter 'background-image-iframe'
+	 */
+	public function filter_iframe($html, $size = 'cover', $position = 'center') {
+
+    $doc = new DOMDocument();
+    //$doc->loadHTML( $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
+		$doc->loadHTML($html); // compat php5.2
+    $tags = $doc->getElementsByTagName( 'iframe' );
+    foreach ( $tags as $tag ) {
+      // $iframe_src = $tag->attributes->getNamedItem('src')->value;
+			// $url = add_query_arg( array(
+			//
+			// 	// https://developers.google.com/youtube/player_parameters
+			// 	'autohide' => 1,
+			// 	'autoplay' => 1,
+			// 	'controls' => 0,
+			// 	'feature' => null,
+			// 	'modestbranding' => 1,
+			// 	'playsinline' => 1,
+			// 	'rel' => 0,
+			// 	'showinfo' => 0,
+			// 	'loop' => 1,
+			// 	'mute' => 1,
+			//
+			// 	// https://developer.vimeo.com/player/embedding
+      //   'badge' => 0,
+      //   'byline' => 0,
+      //   'portrait' => 0,
+      //   'title' => 0,
+			// ), $iframe_src );
+      // $tag->setAttribute('src', $url);
+
+			$tag->setAttribute('onload', "onBackgroundVideo(this, '$size', '$position')");
+			$tag->setAttribute('style', "position:absolute");
+      $html = $doc->saveHTML();
+    }
+    return $html;
+	}
 
 
 }

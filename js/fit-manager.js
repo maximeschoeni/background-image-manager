@@ -34,10 +34,11 @@ function createFitManager(image) {
 			image.parentNode.style.overflow = "hidden";
 		},
 		update: function() {
+
 			var width = this.width || image.parentNode && image.parentNode.clientWidth;
 			var height = this.height || image.parentNode && image.parentNode.clientHeight;
 			var imageWidth = this.imageWidth || image.width || image.naturalWidth;
-			var imageHeight = this.imageHeight || image.height || image.naturalHeight;
+			var imageHeight = this.imageHeight || image.height || image.naturalHeight;				
 			if (width && height && imageHeight && imageWidth) {
 				this.fit(width, height, imageWidth, imageHeight);
 			}

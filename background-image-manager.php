@@ -104,6 +104,8 @@ class Background_Image_Manager {
 		$path = '';
 		$file = get_post_meta($img_id, '_wp_attached_file', true);
 
+
+
 		if ($type === 'image/jpeg' || $type === 'image/jpg' || $type === 'image/png') {
 
 			if (!$img_sizes) {
@@ -128,6 +130,17 @@ class Background_Image_Manager {
 				}
 
 			}
+
+			if (!$sources) {
+
+				$sources[] = array(
+					'src' => $baseurl . $file,
+					'width' => $metadata['width'],
+					'height' => $metadata['height']
+				);
+
+			}
+			
 
 // 		full ->
 //
