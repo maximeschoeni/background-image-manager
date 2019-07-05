@@ -18,16 +18,6 @@ class Background_Image_Manager_Admin extends Background_Image_Manager {
 	}
 
 	/**
-	 * @API
-	 * @filter: 'background-image-manager-sources'
-	 */
-	public function filter_sources($sources, $img_id, $img_sizes = null, $type = 'image/jpeg') {
-
-		return $this->get_image_source($img_id, $img_sizes, $type);
-
-	}
-
-	/**
 	 *	Profile requirement metabox callback
 	 */
 	public function init() {

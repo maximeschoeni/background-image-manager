@@ -17,6 +17,8 @@ class Background_Image_Manager_Site extends Background_Image_Manager {
 
 		add_action('init', array($this, 'init'));
 
+		add_filter('background-image-manager-sources', array($this, 'filter_sources'), 10, 4);
+
 	}
 
 	/**
@@ -154,7 +156,8 @@ class Background_Image_Manager_Site extends Background_Image_Manager {
 
 		} else if (strpos($type, 'video') !== false) { // video
 
-			$attributes['onLoadeddata'] = "onBackgroundVideo(this, '$size', '$position')";
+			$attributes['onloadstart'] = "onBackgroundVideo(this, '$size', '$position')";
+			$attributes['onLoadeddata'] = "this.dispatchEvent(new CustomEvent('update'))";
 			$attributes['style'] = 'position:absolute';
 
 			include plugin_dir_path( __FILE__ ) . 'include/video.php';

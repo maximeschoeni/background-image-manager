@@ -140,7 +140,7 @@ class Background_Image_Manager {
 				);
 
 			}
-			
+
 
 // 		full ->
 //
@@ -161,6 +161,16 @@ class Background_Image_Manager {
 		}
 
 		return $sources;
+
+	}
+
+	/**
+	 * @API
+	 * @filter: 'background-image-manager-sources'
+	 */
+	public function filter_sources($sources, $img_id, $img_sizes = null, $type = 'image/jpeg') {
+
+		return $this->get_image_source($img_id, $img_sizes, $type);
 
 	}
 

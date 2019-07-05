@@ -23,6 +23,16 @@ function createFitManager(image) {
 				if (this.position.indexOf("right") > -1) alignH = 1;
 				if (this.position.indexOf("top") > -1) alignV = 0;
 				if (this.position.indexOf("bottom") > -1) alignV = 1;
+
+				if (this.position.indexOf("%") > -1) {
+					var percents = this.position.split(" ");
+					if (percents[0].indexOf("%") === percents[0].length - 1) {
+						alignV = parseInt(percents[0].slice(0, -1))/100;
+					}
+					if (percents.length === 2 && percents[1].indexOf("%") === percents[1].length - 1) {
+						alignH = parseInt(percents[1].slice(0, -1))/100;
+					}
+				}
 			}
 			var top = (containerHeight - height)*alignV;
 			var left = (containerWidth - width)*alignH;
@@ -38,7 +48,7 @@ function createFitManager(image) {
 			var width = this.width || image.parentNode && image.parentNode.clientWidth;
 			var height = this.height || image.parentNode && image.parentNode.clientHeight;
 			var imageWidth = this.imageWidth || image.width || image.naturalWidth;
-			var imageHeight = this.imageHeight || image.height || image.naturalHeight;				
+			var imageHeight = this.imageHeight || image.height || image.naturalHeight;
 			if (width && height && imageHeight && imageWidth) {
 				this.fit(width, height, imageWidth, imageHeight);
 			}
